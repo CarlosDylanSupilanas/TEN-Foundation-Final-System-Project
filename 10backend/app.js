@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from "express";
 import cors from 'cors';
-
+import workerRoutes from "./routes/workerRoutes.js";
 import authRoutes, { getSecret } from "./routes/authRoutes.js";
 
 import traineeRoutes from "./routes/traineeRoutes.js"; // ADDED
@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(cors(corsOptions));
 
 app.use('/auth', authRoutes);
-
+app.use('/worker', workerRoutes);
 app.use('/trainee', traineeRoutes); // ADDED
 
 try {

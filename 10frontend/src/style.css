@@ -1,0 +1,393 @@
+/* DARIEL */
+
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600&display=swap");
+
+/* Admin dashboard. Everything is scoped under .admin so the public pages are not affected */
+
+.admin {
+    --ink: #2a0f14;
+    --navy: #c8102e;
+    --navy-dark: #8f0b20;
+    --orange: #ff5a6a;
+    --orange-dark: #a30d25;
+    --paper: #fff7f7;
+    --card: #ffffff;
+    --line: #f1d6da;
+    --muted: #7a5a60;
+    --danger: #b3261e;
+    --danger-bg: #fdecea;
+    --font-head: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    min-height: 100vh;
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    color: var(--ink);
+    background:
+        radial-gradient(900px 380px at 85% -80px, rgba(255, 90, 106, 0.12), transparent 70%),
+        var(--paper);
+    color-scheme: light;
+}
+
+.admin *, .admin *::before, .admin *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.admin h1, .admin h2 { font-family: var(--font-head); line-height: 1.1; }
+
+.admin :focus-visible {
+    outline: 3px solid var(--orange);
+    outline-offset: 3px;
+}
+
+/* Top bar: logo + title | centered navigation | logout */
+.admin .admin-bar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+    padding: 22px clamp(20px, 5vw, 64px);
+    color: #fff;
+    background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+    box-shadow: 0 18px 40px -28px rgba(143, 11, 32, 0.8);
+    animation: admin-drop 0.6s var(--ease) both;
+}
+
+.admin .admin-title h1 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; letter-spacing: -0.01em; }
+.admin .admin-title p { margin-top: 4px; color: #ffd9de; }
+
+/* Logo + title */
+.admin .admin-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.admin .admin-logo {
+    flex: none;
+    width: 54px;
+    height: 54px;
+    object-fit: cover;
+    border-radius: 12px;
+    background: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.55);
+    box-shadow: 0 10px 20px -12px rgba(0, 0, 0, 0.6);
+}
+
+/* Navigation (buttons match Logout) */
+.admin .admin-nav {
+    display: flex;
+    gap: 10px;
+}
+
+.admin .nav-btn {
+    padding: 9px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s var(--ease);
+}
+
+.admin .nav-btn:hover { background: #fff; color: var(--navy-dark); border-color: #fff; transform: translateY(-2px); }
+.admin .nav-btn:active { transform: translateY(0); }
+
+/* Selected tab */
+.admin .nav-btn.active {
+    cursor: default;
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+.admin .nav-btn.active:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: none;
+}
+
+.admin .logout {
+    justify-self: end;
+    padding: 9px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s var(--ease);
+}
+
+.admin .logout:hover { background: #fff; color: var(--navy-dark); border-color: #fff; transform: translateY(-2px); }
+.admin .logout:active { transform: translateY(0); }
+
+.admin .admin-content {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(24px, 4vw, 48px) clamp(20px, 5vw, 64px) 64px;
+}
+
+/* Search (left) + register (right) card */
+.admin .admin-form-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    gap: 32px;
+    padding: 24px 28px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: 0 24px 44px -34px rgba(143, 11, 32, 0.55);
+    animation: admin-rise 0.7s 0.1s var(--ease) both;
+}
+
+.admin .admin-form-card label { display: block; margin-bottom: 8px; font-weight: 600; }
+
+.admin .search-box {
+    padding-right: 32px;
+    border-right: 1px solid var(--line);
+}
+
+.admin .input-fields { display: flex; gap: 10px; }
+
+.admin #workerName,
+.admin #workerSearch {
+    width: 100%;
+    min-width: 0;
+    padding: 10px 14px;
+    font: inherit;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.admin #workerName { flex: 1; }
+
+.admin #workerName::placeholder,
+.admin #workerSearch::placeholder { color: #a98c92; }
+
+.admin #workerName:hover,
+.admin #workerSearch:hover { border-color: var(--navy); }
+
+.admin #workerName:focus,
+.admin #workerSearch:focus {
+    outline: none;
+    border-color: var(--navy);
+    box-shadow: 0 0 0 4px rgba(200, 16, 46, 0.15);
+}
+
+/* Smaller Generate QR Code button */
+.admin #generateBtn {
+    flex: none;
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 9px;
+    background: var(--navy);
+    color: #fff;
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.25s ease, transform 0.25s var(--ease), box-shadow 0.25s ease;
+}
+
+.admin #generateBtn:hover { background: var(--navy-dark); transform: translateY(-2px); box-shadow: 0 10px 20px -12px rgba(143, 11, 32, 0.7); }
+.admin #generateBtn:active { transform: translateY(0); }
+.admin #generateBtn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* Search field with icon and clear button */
+.admin .search-field { position: relative; }
+
+.admin .search-icon {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+}
+
+.admin #workerSearch { padding-left: 42px; padding-right: 40px; }
+
+.admin .search-clear {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.admin .search-clear:hover { background: var(--paper); color: var(--navy-dark); }
+
+.admin .form-error,
+.admin .notice {
+    margin-top: 14px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.admin .form-error { color: var(--danger); background: var(--danger-bg); animation: admin-shake 0.4s ease; }
+.admin .notice { color: #8f0b20; background: #ffeaec; }
+
+/* Worker list */
+.admin .list-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin: 40px 0 18px;
+}
+
+.admin .list-head h2 { font-size: 1.5rem; font-weight: 800; color: var(--navy-dark); }
+.admin .list-count { color: var(--muted); font-weight: 600; }
+
+.admin .empty-list {
+    padding: 48px 20px;
+    text-align: center;
+    color: var(--muted);
+    border: 2px dashed var(--line);
+    border-radius: 16px;
+    overflow-wrap: anywhere;
+}
+
+.admin #workerList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 20px;
+}
+
+.admin .workerCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 22px 20px 20px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-top: 5px solid var(--navy);
+    border-radius: 16px;
+    text-align: center;
+    animation: admin-rise 0.5s var(--ease) both;
+    transition: transform 0.3s var(--ease), box-shadow 0.3s ease, border-top-color 0.3s ease;
+}
+
+.admin .workerCard:hover {
+    transform: translateY(-4px);
+    border-top-color: var(--orange);
+    box-shadow: 0 24px 36px -26px rgba(143, 11, 32, 0.6);
+}
+
+.admin .workerCard img {
+    display: block;
+    width: 160px;
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 14px;
+    padding: 8px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+}
+
+.admin .workerCard h2 {
+    flex-grow: 1;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--navy-dark);
+    overflow-wrap: anywhere;
+}
+
+.admin .worker-id {
+    margin-top: 8px;
+    padding: 3px 12px;
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+}
+
+/* Smaller Download / Delete buttons */
+.admin .card-actions {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 14px;
+    width: 100%;
+}
+
+.admin .card-actions button {
+    padding: 6px 8px;
+    border-radius: 7px;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s var(--ease);
+}
+
+.admin .card-actions .download-btn { flex: 1.5; }
+.admin .card-actions .delete-btn { flex: 1; }
+
+.admin .card-actions button:hover { transform: translateY(-2px); }
+.admin .card-actions button:active { transform: translateY(0); }
+
+.admin .download-btn { color: #fff; background: var(--navy); border: 1px solid var(--navy); }
+.admin .download-btn:hover { background: var(--navy-dark); border-color: var(--navy-dark); }
+
+.admin .delete-btn { color: var(--muted); background: transparent; border: 1px solid var(--line); }
+.admin .delete-btn:hover { color: #fff; background: var(--ink); border-color: var(--ink); }
+
+/* Motion */
+@keyframes admin-drop {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes admin-rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes admin-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+@media (max-width: 860px) {
+    .admin .admin-form-card { grid-template-columns: 1fr; gap: 24px; }
+    .admin .search-box { padding-right: 0; padding-bottom: 24px; border-right: 0; border-bottom: 1px solid var(--line); }
+}
+
+@media (max-width: 640px) {
+    .admin .admin-bar { grid-template-columns: 1fr auto; }
+    .admin .admin-nav { grid-column: 1 / -1; grid-row: 2; justify-self: center; }
+}
+
+@media (max-width: 560px) {
+    .admin .input-fields { flex-direction: column; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin *, .admin *::before, .admin *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}

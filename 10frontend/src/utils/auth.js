@@ -2,11 +2,12 @@ export const API_URL = "http://localhost:3000";
 
 // >>> If your Express routes are named differently, change ONLY these three lines <<<
 const ROUTES = {
-
+  adminLogin: "/auth/login",
   userLogin: "/trainee/login",  // ADDED KE
   userRegister: "/trainee/register", // KE
 };
 
+const ADMIN_KEY = "adminToken";
 const USER_KEY = "traineeToken"; // KE
 
 const read = (key) => {
@@ -31,11 +32,18 @@ const remove = (key) => {
   }
 };
 
+export const getToken = () => read(ADMIN_KEY);
+export const setToken = (token) => write(ADMIN_KEY, token);
+export const clearToken = () => remove(ADMIN_KEY);
+
+
 // KE
 export const getUserToken = () => read(USER_KEY);
 export const clearUserToken = () => remove(USER_KEY);
 
+export const isAdminSignedIn = () => Boolean(getToken());
 export const isTraineeSignedIn = () => Boolean(getUserToken()); // KE
+export const isSignedIn = isAdminSignedIn;
 
 const post = async (path, body) => {
   let response;
@@ -53,6 +61,12 @@ const post = async (path, body) => {
     throw new Error(data.error || data.message || "Something went wrong. Please try again.");
   }
   return data;
+};
+
+export const loginAdmin = async (email, password) => {
+  const data = await post(ROUTES.adminLogin, { email, password });
+  if (!data.token) throw new Error("Login failed.");
+  setToken(data.token);
 };
 
 export const loginUser = async (email, password) => {

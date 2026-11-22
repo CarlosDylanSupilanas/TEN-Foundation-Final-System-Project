@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { isTraineeSignedIn } from "../utils/auth";
+import { isAdminSignedIn, isTraineeSignedIn } from "../utils/auth";
 import "../site.css";
 
 const Icon = ({ children }) => (
@@ -134,7 +134,8 @@ const CONTACTS = [
 ];
 
 const Home = () => {
-  const signedIn = isTraineeSignedIn();
+    const admin = isAdminSignedIn();
+  const signedIn = admin || isTraineeSignedIn();
   const rootRef = useRef(null);
 
   // Reveal the lower sections once, as they scroll into view
@@ -164,8 +165,8 @@ const Home = () => {
     return () => observer.disconnect();
   }, []);
 
-const target = "/training";
-const targetLabel = "Go to training";
+const target = admin ? "/admin" : "/training";
+const targetLabel = admin ? "Open dashboard" : "Go to training";
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
