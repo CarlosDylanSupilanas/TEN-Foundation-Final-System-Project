@@ -1,0 +1,280 @@
+/* ke */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f8f5f1;
+  color: #333;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+/* Header */
+.navbar {
+  background: #902907;
+  color: white;
+  padding: 20px 7%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar h1, .navbar h2 {
+  color: white;
+  margin: 0;
+}
+
+.navbar small {
+  color: #f5e5d9;
+}
+
+.logout {
+  background: white;
+  color: #902907;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 5px;
+}
+
+/* Main container */
+.container {
+  width: 90%;
+  max-width: 1000px;
+  margin: 40px auto;
+}
+
+/* Cards */
+.form-card,
+.section-card,
+.dashboard-card {
+  background: white;
+  padding: 28px;
+  border-radius: 10px;
+  border: 1px solid #eadfd6;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 25px;
+}
+
+.form-card {
+  max-width: 500px;
+  margin: 40px auto;
+}
+
+h1, h2, h3 {
+  margin-bottom: 12px;
+}
+
+.form-card h1,
+.section-card h1 {
+  color: #902907;
+}
+
+p {
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Forms */
+form {
+  margin-top: 20px;
+}
+
+label {
+  display: block;
+  margin: 14px 0 7px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+input:not([type="radio"]) {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+input:focus {
+  outline: none;
+  border-color: #902907;
+}
+
+/* Buttons */
+.primary-btn {
+  width: 100%;
+  padding: 12px;
+  background: #902907;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: #713019;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-card p button {
+  background: none;
+  border: none;
+  color: #902907;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+/* Training programs */
+.program-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  border: 1px solid #eadfd6;
+  border-radius: 6px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.program-card input[type="radio"] {
+  accent-color: #902907;
+}
+
+.program-card:hover {
+  background: #faf3ed;
+}
+
+/* Dashboard */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 25px;
+}
+
+.dashboard-card {
+  border-left: 4px solid #902907;
+}
+
+.dashboard-card h1 {
+  color: #902907;
+  font-size: 30px;
+}
+
+/* Applications */
+#applicationList {
+  display: grid;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.application-card {
+  background: white;
+  padding: 20px;
+  border: 1px solid #eadfd6;
+  border-radius: 8px;
+}
+
+.application-card h3 {
+  color: #902907;
+}
+
+.application-card p {
+  margin-top: 8px;
+}
+
+/* Status */
+.status {
+  display: inline-block;
+  padding: 6px 13px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  margin: 5px 0 10px;
+}
+
+.accepted {
+  background: #d4edda;
+  color: #176b34;
+}
+
+.rejected {
+  background: #f8d7da;
+  color: #a3222e;
+}
+
+.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.for-ci {
+  background: #dce8ff;
+  color: #24549a;
+}
+
+/* Messages */
+.message {
+  margin-top: 15px;
+  color: #902907;
+  font-weight: bold;
+}
+
+.form-error {
+  color: #b83232;
+}
+
+.notice {
+  margin-top: 15px;
+  padding: 12px;
+  background: #fff3cd;
+  border-radius: 5px;
+}
+
+.empty-list {
+  text-align: center;
+  padding: 25px;
+  color: #888;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .container {
+    width: 94%;
+  }
+
+  .form-card,
+  .section-card {
+    padding: 20px;
+  }
+}
+
+/* ADDED */
+.trainee {
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background: #f8f5f1;
+  color: #333;
+}
