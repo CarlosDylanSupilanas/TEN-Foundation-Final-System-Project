@@ -1,9 +1,15 @@
+import "./style.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
-
+import WorkerPage from "./pages/WorkerPage";
 import Training from "./pages/Training"; // ADDED - KE
-import { isTraineeSignedIn } from "./utils/auth";
+
+import { isAdminSignedIn, isTraineeSignedIn } from "./utils/auth";
+
+const RequireAdmin = ({ children }) =>
+  isAdminSignedIn() ? children : <Navigate to="/signin" replace />;
+
 
 // AADED KE
 // Only a signed-in trainee can see the training page
@@ -17,6 +23,15 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/signin" element={<SignIn />} />
+
+      <Route
+        path="/admin"
+        element={
+          <RequireAdmin> {/* new - 'admin' - in original its Auth */}
+            <WorkerPage />
+          </RequireAdmin>
+        }
+      />
 
       {/* KE - training */}
       <Route

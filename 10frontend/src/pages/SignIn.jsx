@@ -3,10 +3,13 @@
 import { useState } from "react";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import {
+  isAdminSignedIn,
   isTraineeSignedIn,
+  loginAdmin,
   loginUser,
   registerUser,
 } from "../utils/auth";
+import "../site.css";
 
 const EMPTY = { name: "", email: "", password: "", contact: "", address: "" };
 
@@ -45,6 +48,9 @@ const SignIn = () => {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  if (isAdminSignedIn()) {
+    return <Navigate to="/admin" replace />;
+  }
   if (isTraineeSignedIn()) {
     return <Navigate to="/training" replace />;
   }
@@ -87,7 +93,20 @@ const SignIn = () => {
     try {
       if (mode === "register") {
         await registerUser(cleaned);
-      } else {  
+      } else { 
+        
+        let isAdmin = false;
+        try {
+          await loginAdmin(cleaned.email, cleaned.password);
+          isAdmin = true;
+        } catch {
+          // not an admin (or the server is off): try trainee login below
+        }
+
+        if (isAdmin) {
+          navigate("/admin", { replace: true });
+          return;
+        } 
 
         await loginUser(cleaned.email, cleaned.password);
       }
