@@ -80,6 +80,21 @@ export const registerUser = async (details) => {
   if (data.token) write(USER_KEY, data.token);
 };
 
+// Logbook
+const LOGBOOK_KEY = "logbookToken";
+const LOGBOOK_LOGIN_ROUTE = "/logbook/login";
+
+export const getLogbookToken = () => read(LOGBOOK_KEY);
+export const clearLogbookToken = () => remove(LOGBOOK_KEY);
+export const isLogbookSignedIn = () => Boolean(getLogbookToken());
+
+export const loginLogbook = async (email, password) => {
+  const data = await post(LOGBOOK_LOGIN_ROUTE, { email, password });
+  if (!data.token) throw new Error("Login failed.");
+  write(LOGBOOK_KEY, data.token);
+};
+
+
 // ADDED KE
 
 

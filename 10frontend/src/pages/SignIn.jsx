@@ -5,7 +5,9 @@ import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import {
   isAdminSignedIn,
   isTraineeSignedIn,
+  isLogbookSignedIn,
   loginAdmin,
+  loginLogbook,
   loginUser,
   registerUser,
 } from "../utils/auth";
@@ -54,6 +56,9 @@ const SignIn = () => {
   if (isTraineeSignedIn()) {
     return <Navigate to="/training" replace />;
   }
+  if (isLogbookSignedIn()) {
+    return <Navigate to="/logbook" replace />;
+  }
 
 
 
@@ -95,6 +100,7 @@ const SignIn = () => {
         await registerUser(cleaned);
       } else { 
         
+        // Admin
         let isAdmin = false;
         try {
           await loginAdmin(cleaned.email, cleaned.password);
@@ -106,7 +112,21 @@ const SignIn = () => {
         if (isAdmin) {
           navigate("/admin", { replace: true });
           return;
-        } 
+        }
+
+        // Logbook
+                let isLogbook = false;
+        try {
+          await loginLogbook(cleaned.email, cleaned.password);
+          isLogbook = true;
+        } catch {
+          // not the logbook account: try trainee login below
+        }
+
+        if (isLogbook) {
+          navigate("/logbook", { replace: true });
+          return;
+        }
 
         await loginUser(cleaned.email, cleaned.password);
       }
