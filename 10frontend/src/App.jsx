@@ -4,12 +4,14 @@ import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import WorkerPage from "./pages/WorkerPage";
 import Training from "./pages/Training"; // ADDED - KE
-
-import { isAdminSignedIn, isTraineeSignedIn } from "./utils/auth";
+import LogbookPage from "./pages/LogbookPage";
+import { isAdminSignedIn, isTraineeSignedIn, isLogbookSignedIn } from "./utils/auth";
 
 const RequireAdmin = ({ children }) =>
   isAdminSignedIn() ? children : <Navigate to="/signin" replace />;
 
+const RequireLogbook = ({ children }) =>
+  isLogbookSignedIn() ? children : <Navigate to="/signin" replace />;
 
 // AADED KE
 // Only a signed-in trainee can see the training page
@@ -42,6 +44,15 @@ function App() {
           </RequireTrainee>
         }
       />
+
+      <Route
+      path="/logbook"
+      element={
+      <RequireLogbook>
+        <LogbookPage />
+      </RequireLogbook>
+  }
+/>
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

@@ -3,7 +3,7 @@ import express from "express";
 import cors from 'cors';
 import workerRoutes from "./routes/workerRoutes.js";
 import authRoutes, { getSecret } from "./routes/authRoutes.js";
-
+import logbookRoutes from "./routes/logbookRoutes.js";
 import traineeRoutes from "./routes/traineeRoutes.js"; // ADDED
 
 let corsOptions = {
@@ -19,6 +19,7 @@ app.use(cors(corsOptions));
 
 app.use('/auth', authRoutes);
 app.use('/worker', workerRoutes);
+app.use('/logbook', logbookRoutes);
 app.use('/trainee', traineeRoutes); // ADDED
 
 try {
