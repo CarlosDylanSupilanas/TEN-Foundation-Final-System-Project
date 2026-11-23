@@ -6,6 +6,7 @@ import WorkerPage from "./pages/WorkerPage";
 import Training from "./pages/Training"; // ADDED - KE
 import LogbookPage from "./pages/LogbookPage";
 import { isAdminSignedIn, isTraineeSignedIn, isLogbookSignedIn } from "./utils/auth";
+import InventoryPage from "./pages/InventoryPage"; //Added 2.1.1 Dylan
 
 const RequireAdmin = ({ children }) =>
   isAdminSignedIn() ? children : <Navigate to="/signin" replace />;
@@ -23,6 +24,7 @@ function App() {
 
   return (
     <Routes>
+      <Route path="/inventory" element={<InventoryPage />} />
       <Route path="/" element={<Home />} />
       <Route path="/signin" element={<SignIn />} />
 

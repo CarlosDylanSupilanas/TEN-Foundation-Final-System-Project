@@ -12,7 +12,7 @@ import {
   registerUser,
 } from "../utils/auth";
 import "../site.css";
-
+import { INVENTORY_LOGIN_URL } from "../api/bagApi"; // 2.1.1 - Inventory
 const EMPTY = { name: "", email: "", password: "", contact: "", address: "" };
 
 const COPY = {
@@ -83,6 +83,8 @@ const SignIn = () => {
       address: form.address.trim().replace(/\s+/g, " "),
     };
 
+    console.log("SIGNIN RUNNING NEW CODE", cleaned.email);//Added 2.1.1
+
     if (mode === "register" && Object.values(cleaned).some((v) => !v)) {
       setError("Please complete all fields.");
       return;
@@ -99,7 +101,34 @@ const SignIn = () => {
       if (mode === "register") {
         await registerUser(cleaned);
       } else { 
-        
+
+        // 2.1.1 - Inventory admin - checked first
+        let isInventory = false;
+        try {
+          console.log("1. calling inventory login:", INVENTORY_LOGIN_URL);
+          const inventoryResponse = await fetch(INVENTORY_LOGIN_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: cleaned.email, password: cleaned.password }),
+          });
+          console.log("2. inventory status:", inventoryResponse.status);
+          if (inventoryResponse.ok) {
+            const inventoryAdmin = await inventoryResponse.json();
+            sessionStorage.setItem("inventoryAdmin", JSON.stringify(inventoryAdmin));
+            isInventory = true;
+          }
+        } catch (err) {
+          console.log("inventory error:", err);
+        }
+        console.log("3. isInventory =", isInventory);
+        if (isInventory) {
+          console.log("4. navigating to /inventory");
+          navigate("/inventory", { replace: true });
+          return;
+        }
+
+      
+
         // Admin
         let isAdmin = false;
         try {
