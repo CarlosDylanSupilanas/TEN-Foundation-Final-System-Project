@@ -1,0 +1,169 @@
+/* PAGE */
+.inventory {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: #ffffff;
+  color: #222222;
+  font-size: 16px;
+  padding: 16px;
+  min-height: 100vh;
+}
+
+/* TITLE (from InventoryPage) */
+.inventory h1 {
+  background-color: #d7261e;
+  color: white;
+  border: 2px solid #111111;
+  border-radius: 10px;
+  padding: 18px 24px;
+  margin: 0 0 12px 0;
+  font-size: 28px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* MENU: Logout on the right (from InventoryPage) */
+.inventory .menu {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+/* CARD */
+.inventory .card {
+  background-color: white;
+  border: 2px solid #111111;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 4px 4px 0 #d7261e;
+}
+
+/* HEADINGS */
+.inventory h2 {
+  font-size: 20px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #d7261e;
+  margin: 0 0 12px 0;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #111111;
+}
+
+.inventory h3 {
+  font-size: 15px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #d7261e;
+  margin: 14px 0 6px 0;
+}
+
+/* FORM */
+.inventory form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  background-color: #fbeceb;
+  border: 1px solid #111111;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+/* INPUTS */
+.inventory input {
+  flex: 1;
+  min-width: 130px;
+  padding: 11px;
+  border: 1px solid #111111;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: white;
+}
+
+.inventory input:focus {
+  outline: none;
+  border-color: #d7261e;
+  box-shadow: 0 0 0 2px #d7261e;
+}
+
+/* BUTTONS */
+.inventory .buttonTab {
+  display: inline-block;
+  background-color: #d7261e;
+  color: white;
+  border: 2px solid #111111;
+  border-radius: 6px;
+  padding: 9px 18px;
+  margin-right: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.inventory .buttonTab:hover {
+  background-color: #111111;
+}
+
+/* Edit and Delete: white with red text */
+.inventory .buttonEdit,
+.inventory .buttonDelete {
+  background-color: white;
+  color: #d7261e;
+}
+
+.inventory .buttonEdit:hover,
+.inventory .buttonDelete:hover {
+  background-color: #d7261e;
+  color: white;
+}
+
+/* Cancel and Logout: black */
+.inventory .buttonGray {
+  background-color: #111111;
+  color: white;
+}
+
+/* TABLE */
+.inventory .table {
+  border: 2px solid #111111;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.inventory .tableHeader {
+  display: flex;
+  background-color: #d7261e;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.inventory .tableRow {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #111111;
+  font-size: 16px;
+}
+
+.inventory .tableRow:last-child {
+  border-bottom: none;
+}
+
+.inventory .tableRow:hover {
+  background-color: #fbeceb;
+}
+
+.inventory .tableHeader div,
+.inventory .tableRow div {
+  flex: 1;
+  padding: 11px 12px;
+  border-right: 1px solid #111111;
+}
+
+.inventory .tableHeader div:last-child,
+.inventory .tableRow div:last-child {
+  border-right: none;
+}
