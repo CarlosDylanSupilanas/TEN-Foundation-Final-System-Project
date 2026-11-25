@@ -1,0 +1,129 @@
+/* ShipmentStyle.css - styles only the Record Bag Shipment section */
+/* 2.1.2 */
+.shipment {
+  margin-top: 24px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden; /* nothing can stick out of the card */
+}
+
+.shipment h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.shipment h3 {
+  margin: 24px 0 8px;
+}
+
+/* ---------- Form ---------- */
+.shipment form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.shipment select,
+.shipment input {
+  flex: 1 1 180px;
+  min-width: 0; /* lets the box shrink instead of growing with its text */
+  max-width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #c9c9c9;
+  border-radius: 6px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+/* Long option text is cut with "..." instead of widening the box */
+.shipment select {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.shipment select:focus,
+.shipment input:focus {
+  outline: none;
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+}
+
+.shipment button {
+  flex: 0 0 auto;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* "Current stock: 10" line under the form */
+.shipment form + p {
+  margin: 12px 0 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Message (green / red) ---------- */
+.shipment .shipmentMessage {
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-weight: bold;
+  overflow-wrap: anywhere; /* long text wraps to the next line */
+}
+
+.shipment .shipmentMessage.ok {
+  background: #e8f5e9;
+  color: #1b5e20;
+  border: 1px solid #a5d6a7;
+}
+
+.shipment .shipmentMessage.bad {
+  background: #fdecea;
+  color: #b71c1c;
+  border: 1px solid #f5a5a5;
+}
+
+/* ---------- Stock table ---------- */
+.shipment table {
+  width: 100%;
+  table-layout: fixed; /* columns stay inside the card */
+  border-collapse: collapse;
+}
+
+.shipment th,
+.shipment td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  overflow-wrap: anywhere; /* long names wrap */
+}
+
+.shipment th {
+  background: #f4f4f4;
+}
+
+.shipment tbody tr:hover {
+  background: #fafafa;
+}
+
+/* Stock number is the last column */
+.shipment th:last-child,
+.shipment td:last-child {
+  text-align: center;
+  width: 90px;
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 600px) {
+  .shipment form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .shipment button {
+    width: 100%;
+  }
+}

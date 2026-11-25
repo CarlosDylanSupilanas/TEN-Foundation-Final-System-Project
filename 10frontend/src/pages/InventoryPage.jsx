@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { BAG_URL, INVENTORY_LOGIN_URL } from "../api/bagApi";
 import InventoryMain from "../Components/InventoryMain";
+import InventoryShipment from "../Components/InventoryShipment"; // ADDED - 2.1.2 Record Bag Shipments
 import "../StyleInventory.css";
 
 function InventoryPage() {
   const [admin, setAdmin] = useState(() =>
-    JSON.parse(sessionStorage.getItem("inventoryAdmin") || "null")
+    JSON.parse(sessionStorage.getItem("inventoryAdmin") || "null"),
   );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,14 +17,44 @@ function InventoryPage() {
       const response = await fetch(BAG_URL);
       const data = await response.json();
       setBags(Array.isArray(data) ? data : []);
-    } catch (err) {
+    } catch {
+      // fixed
       setBags([]);
     }
   }
+  // ADDED - 2.1.2: changes only when the top section adds/edits/deletes a bag.
+  const [shipmentVersion, setShipmentVersion] = useState(0);
 
   useEffect(() => {
-    if (admin) loadBags();
+    // replace in 2.1.2
+    if (!admin) return;
+
+    let cancelled = false;
+
+    // ADDED - 2.1.2: loads the bags once after login (same as loadBags, but lint-safe)
+    async function firstLoad() {
+      try {
+        const response = await fetch(BAG_URL);
+        const data = await response.json();
+        if (!cancelled) setBags(Array.isArray(data) ? data : []);
+      } catch {
+        if (!cancelled) setBags([]);
+      }
+    }
+
+    firstLoad();
+
+    return () => {
+      cancelled = true;
+    };
   }, [admin]);
+
+  // Used by the top section (add / edit / delete a bag)
+  // ADDED - 2.1.2: also bumps shipmentVersion so the shipment form reloads its dropdown
+  async function handleBagsChanged() {
+    await loadBags();
+    setShipmentVersion((version) => version + 1);
+  }
 
   async function handleLogin(event) {
     event.preventDefault();
@@ -60,11 +91,23 @@ function InventoryPage() {
         <div className="card">
           <h2>Inventory Admin Login</h2>
           <form onSubmit={handleLogin}>
-            <input type="email" placeholder="Email" required
-              value={email} onChange={(e) => setEmail(e.target.value)} />
-            <input type="password" placeholder="Password" required
-              value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button type="submit" className="buttonTab">Login</button>
+            <input
+              type="email"
+              placeholder="Email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button type="submit" className="buttonTab">
+              Login
+            </button>
           </form>
         </div>
       </section>
@@ -77,9 +120,14 @@ function InventoryPage() {
       <h1>Bag Inventory</h1>
       <div className="menu">
         <span></span>
-        <button className="buttonTab buttonGray" onClick={handleLogout}>Logout</button>
+        <button className="buttonTab buttonGray" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
-      <InventoryMain bags={bags} loadBags={loadBags} />
+      <InventoryMain bags={bags} loadBags={handleBagsChanged} />
+
+      {/* ADDED - 2.1.2 Record Bag Shipments */}
+      <InventoryShipment key={shipmentVersion} onShipped={loadBags} />
     </section>
   );
 }
