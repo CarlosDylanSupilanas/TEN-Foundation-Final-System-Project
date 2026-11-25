@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 import pool from '../config/db.js';
 import { getSecret } from './authRoutes.js';
 import * as workerModel from '../models/workerModels.js';
-
+import * as attendanceModel from '../models/attendanceModels.js';
 const logbookRoutes = express.Router();
 
 const INVALID_LOGIN = "Invalid email or password!";
@@ -104,12 +104,9 @@ logbookRoutes.post('/scan', requireLogbook, async (req, res) => {
             });
         }
 
-        // 3) Don't record the same worker twice within one minute
-        const [recent] = await pool.query(
-            'SELECT id FROM attendance WHERE worker_id = ? AND scanned_at > (NOW() - INTERVAL 1 MINUTE) LIMIT 1',
-            [workerId]
-        );
-        if (recent.length > 0) {
+                // 3) Ignore a repeat scan within one minute
+        const recent = await attendanceModel.findRecentEvent(workerId);
+        if (recent) {
             return res.status(409).json({
                 success: false,
                 code: 'ALREADY_LOGGED',
@@ -117,15 +114,51 @@ logbookRoutes.post('/scan', requireLogbook, async (req, res) => {
             });
         }
 
-        // 4) Record attendance
-        await pool.query('INSERT INTO attendance(worker_id) VALUES (?)', [workerId]);
+              // 4) Only 2 scans a day: Time In, then Time Out
+const todayRecord = await attendanceModel.findTodayRecord(workerId);
+
+if (todayRecord && todayRecord.timeOut) {
+    return res.status(409).json({
+        success: false,
+        code: 'COMPLETED',
+        error: `${worker.name} already timed in and out today.`
+    });
+}
+
+let action;
+let recordId;
+if (!todayRecord) {
+    recordId = await attendanceModel.insertTimeIn(workerId);
+    action = 'TIME_IN';
+} else {
+    await attendanceModel.setTimeOut(todayRecord.id);
+    recordId = todayRecord.id;
+    action = 'TIME_OUT';
+}
+
+        
+        const record = await attendanceModel.findById(recordId);
+        const label = action === 'TIME_IN' ? 'Time In' : 'Time Out';
 
         res.status(200).json({
             success: true,
-            message: `Attendance recorded for ${worker.name} (${worker.workerId}).`,
+            action,
+            message: `${label} recorded for ${worker.name} (${worker.workerId}).`,
             worker: { workerId: worker.workerId, name: worker.name },
-            scannedAt: new Date().toISOString()
+            attendance: record,
+            recordedAt: action === 'TIME_IN' ? record.timeIn : record.timeOut
         });
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({ error: "Something went wrong. Please try again." });
+    }
+});
+
+// Today's Activity
+logbookRoutes.get('/today', requireLogbook, async (req, res) => {
+    try {
+        const records = await attendanceModel.fetchToday();
+        res.status(200).json({ success: true, records });
     } catch (e) {
         console.log(e);
         res.status(500).json({ error: "Something went wrong. Please try again." });

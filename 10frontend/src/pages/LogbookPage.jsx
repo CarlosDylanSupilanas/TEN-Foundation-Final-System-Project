@@ -5,7 +5,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Html5Qrcode } from "html5-qrcode";
-import { scanQr } from "../api/logbookApi";
+import { scanQr, fetchToday } from "../api/logbookApi";
+import {
+  loadLatestEvent,
+  saveLatestEvent,
+  loadTodayRecords,
+  saveTodayRecords,
+  upsertRecord,
+} from "../utils/attendanceStorage";
 import { clearLogbookToken } from "../utils/auth";
 import "../logbook.css";
 
@@ -26,7 +33,21 @@ const RESULT_BY_CODE = {
   INVALID_QR: "invalid",
   UNREGISTERED: "unregistered",
   ALREADY_LOGGED: "duplicate",
+  COMPLETED: "duplicate",
 };
+
+
+const ACTION_LABEL = { TIME_IN: "Time In", TIME_OUT: "Time Out" };
+
+const formatTime = (value) =>
+  value
+    ? new Date(value).toLocaleTimeString([], { hour: "numeric", minute: "2-digit", second: "2-digit" })
+    : "—";
+
+  const formatDate = (value) =>
+  value
+    ? new Date(value).toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" })
+    : "—";
 
 const LogbookPage = () => {
   const navigate = useNavigate();
@@ -35,6 +56,27 @@ const LogbookPage = () => {
 
   const [status, setStatus] = useState("idle");
   const [result, setResult] = useState(null); // { type, text }
+
+
+  const [latest, setLatest] = useState(loadLatestEvent);
+  const [today, setToday] = useState(loadTodayRecords);
+  const [todayError, setTodayError] = useState("");
+
+  const refreshToday = async () => {
+    try {
+      const data = await fetchToday();
+      setToday(data.records);
+      saveTodayRecords(data.records);
+      setTodayError("");
+    } catch (e) {
+      setTodayError(`${e.message} Showing activity saved in this browser.`);
+    }
+  };
+
+  useEffect(() => {
+    refreshToday();
+  }, []);
+
 
   const stopScanner = async () => {
     const scanner = scannerRef.current;
@@ -64,9 +106,33 @@ const LogbookPage = () => {
     busyRef.current = true;
 
     try {
+
       const data = await scanQr(text);
-      const time = new Date(data.scannedAt).toLocaleTimeString();
-      setResult({ type: "success", text: `${data.message} (${time})` });
+      const record = data.attendance;
+
+      setResult({
+        type: "success",
+        text: `${data.message} (${formatTime(data.recordedAt)})`,
+      });
+
+      const event = {
+        workerId: record.workerId,
+        name: record.name,
+        action: data.action,
+        timeIn: record.timeIn,
+        timeOut: record.timeOut,
+        recordedAt: data.recordedAt,
+      };
+      setLatest(event);
+      saveLatestEvent(event);
+
+      const records = upsertRecord(loadTodayRecords(), record);
+      setToday(records);
+      saveTodayRecords(records);
+
+      refreshToday();
+
+
     } catch (e) {
       setResult({ type: RESULT_BY_CODE[e.code] || "error", text: e.message });
     } finally {
@@ -180,7 +246,73 @@ const LogbookPage = () => {
               {result.text}
             </p>
           )}
+
         </section>
+
+
+        <div className="lb-side">
+        <section className="lb-card lb-section">
+          <h2>Latest attendance event</h2>
+          {latest ? (
+            <div className="lb-latest">
+              <div>
+                <p className="lb-latest-name">{latest.name}</p>
+                <p className="lb-muted lb-latest-id">{latest.workerId}</p>
+              </div>
+              <span className={`lb-badge lb-badge-${latest.action === "TIME_IN" ? "in" : "out"}`}>
+                {ACTION_LABEL[latest.action] || latest.action}
+              </span>
+              <p className="lb-latest-time">{formatTime(latest.recordedAt)}</p>
+            </div>
+          ) : (
+            <p className="lb-muted">No attendance recorded yet.</p>
+          )}
+        </section>
+
+        <section className="lb-card lb-section lb-today">
+          <div className="lb-section-head">
+            <h2>Today's Activity <span className="lb-muted">· {formatDate(new Date())}</span></h2>
+            <span className="lb-muted">{today.length} record{today.length === 1 ? "" : "s"}</span>
+          </div>
+
+          {todayError && <p className="lb-result lb-result-unregistered">{todayError}</p>}
+
+          {today.length === 0 ? (
+            <p className="lb-muted">No activity yet today.</p>
+          ) : (
+            <div className="lb-table-wrap">
+              <table className="lb-table">
+                <thead>
+  <tr>
+    <th>Worker</th>
+    <th>ID</th>
+    <th>Date</th>
+    <th>Time In</th>
+    <th>Time Out</th>
+    <th>Status</th>
+  </tr>
+</thead>
+<tbody>
+  {today.map((r) => (
+    <tr key={r.id}>
+      <td>{r.name}</td>
+      <td>{r.workerId}</td>
+      <td>{formatDate(r.timeIn)}</td>
+      <td>{formatTime(r.timeIn)}</td>
+      <td>{formatTime(r.timeOut)}</td>
+      <td>
+        <span className={`lb-badge lb-badge-${r.timeOut ? "out" : "in"}`}>
+          {r.timeOut ? "OUT" : "IN"}
+        </span>
+      </td>
+    </tr>
+  ))}
+</tbody>
+              </table>
+            </div>
+          )}
+        </section>
+        </div>
       </main>
     </div>
   );

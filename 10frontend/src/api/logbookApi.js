@@ -29,5 +29,28 @@ export const scanQr = async (qr) => {
     error.status = response.status;
     throw error;
   }
+
+  return data;
+};
+
+  // Today's attendance records
+export const fetchToday = async () => {
+  let response;
+  try {
+    response = await fetch(`${API_URL}/logbook/today`, {
+      headers: { Authorization: `Bearer ${getLogbookToken()}` },
+    });
+  } catch {
+    throw new Error("Can't reach the server. Make sure the backend is running on port 3000.");
+  }
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    if (response.status === 401) {
+      clearLogbookToken();
+      window.location.assign("/signin");
+    }
+        throw new Error(data.error || "Something went wrong. Please try again.");
+  }
   return data;
 };
