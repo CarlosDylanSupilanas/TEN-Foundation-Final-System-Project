@@ -115,3 +115,113 @@
 .logbook .lb-result-unregistered { background: #ffe8cc; color: #8a4b00; }
 .logbook .lb-result-duplicate { background: #dce8ff; color: #24549a; }
 .logbook .lb-result-error { background: #fdecea; color: #b3261e; }
+
+
+
+
+
+.logbook .lb-content {
+  max-width: 1180px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.logbook .lb-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  contain: size;
+  min-height: 0;
+}
+
+.logbook .lb-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.logbook .lb-latest {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+}
+.logbook .lb-latest-name { margin: 0; font-size: 1.15rem; font-weight: 700; }
+.logbook .lb-latest-id { margin: 2px 0 0; }
+.logbook .lb-latest-time { margin: 0; font-weight: 600; color: var(--muted); }
+
+.logbook .lb-badge {
+  display: inline-block;
+  padding: 2px 12px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.logbook .lb-badge-in { background: #d4edda; color: #176b34; }
+.logbook .lb-badge-out { background: #dce8ff; color: #24549a; }
+
+/* Today's Activity fills the remaining height and scrolls */
+.logbook .lb-today {
+  flex: 1;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.logbook .lb-table-wrap {
+  margin-top: 12px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.logbook .lb-table-wrap::-webkit-scrollbar { width: 8px; }
+.logbook .lb-table-wrap::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 8px;
+}
+
+.logbook .lb-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.logbook .lb-table th,
+.logbook .lb-table td {
+  padding: 10px 6px;
+  text-align: left;
+  font-size: 0.88rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--line);
+}
+.logbook .lb-table th { color: var(--muted); font-size: 0.85rem; }
+
+/* keep the header visible while scrolling */
+.logbook .lb-table thead th {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 1;
+}
+
+.logbook .lb-table th:nth-child(1) { width: 22%; }
+.logbook .lb-table th:nth-child(2) { width: 18%; }
+.logbook .lb-table th:nth-child(3) { width: 16%; }
+.logbook .lb-table th:nth-child(4) { width: 15%; }
+.logbook .lb-table th:nth-child(5) { width: 15%; }
+.logbook .lb-table th:nth-child(6) { width: 14%; }
+
+.logbook .lb-table .lb-badge { padding: 2px 8px; font-size: 0.8rem; }
+
+@media (max-width: 900px) {
+  .logbook .lb-content { grid-template-columns: 1fr; }
+  .logbook .lb-side { contain: none; }
+  .logbook .lb-today { min-height: 0; }
+  .logbook .lb-table-wrap { flex: none; max-height: 360px; }
+}
